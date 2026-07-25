@@ -17,7 +17,10 @@ Activate the virtual workspace and install all required libraries:
 - Mac/Linux: `source .venv/bin/activate`
 - Windows: `.venv\Scripts\activate`
 
-Then, run: `pip3 install -r requirements.txt`
+Then, run: 
+```
+pip3 install -r requirements.txt
+```
 
 ### 4. Launch the Jupyter notebook
 Start the interactive session within the isolated environment:
