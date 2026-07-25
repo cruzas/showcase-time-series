@@ -10,7 +10,9 @@ cd showcase-time-series
 ```
 
 ### 2. Create an isolated virtual environment
-`python3 -m venv .venv`
+```
+python3 -m venv .venv
+```
 
 ### 3. Activate the environment and install packages
 Activate the virtual workspace and install all required libraries:
