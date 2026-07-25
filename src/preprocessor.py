@@ -34,8 +34,6 @@ class DataPreprocessor:
             "Size",
             "Temperature",
             "Fuel_Price",
-            "CPI",
-            "Unemployment",
         ]
 
         # We are interested in predicting weekly sales, so we set the target
@@ -84,7 +82,7 @@ class DataPreprocessor:
 
     def transform(self, df: pd.DataFrame) -> tuple:
         df = self.extract_time_features(df)
-        df[["Type"]] = self.encoder.fit_transform(df[["Type"]])
+        df[["Type"]] = self.encoder.transform(df[["Type"]])
 
         x = df[self.features_cols].values
         y = df[self.target_col].values.reshape(-1, 1)
