@@ -1,0 +1,16 @@
+# Data manipulation and analysis
+pandas
+numpy
+scikit-learn
+
+# Machine learning
+torch
+torchvision
+
+# Visualization
+matplotlib
+
+# Interactive environment
+jupyterlab
+ipykernel
+
