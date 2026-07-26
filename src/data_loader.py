@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 
 
@@ -10,9 +11,9 @@ def load_and_merge_data(
     # Read the CSV files into pandas DataFrames.
     target_file = "test.csv" if is_test else "train.csv"
 
-    main_df = pd.read_csv(f"{data_dir}/{target_file}")
-    stores = pd.read_csv(f"{data_dir}/stores.csv")
-    features = pd.read_csv(f"{data_dir}/features.csv")
+    main_df = pd.read_csv(os.path.join(data_dir, target_file))
+    stores = pd.read_csv(os.path.join(data_dir, "stores.csv"))
+    features = pd.read_csv(os.path.join(data_dir, "features.csv"))
 
     # Merge the dataframes for a complete view of the data.
     # This ensures that we combine sales data with store metadata and

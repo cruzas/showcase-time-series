@@ -1,5 +1,10 @@
 # showcase-time-series
-A small code base for showing time series prediction.
+A small code base for showing time series prediction. 
+To do this, we use Walmart sales data: 
+<https://github.com/RawatMeghna/Walmart-Sales-Forecasting-using-Best-ML-algorithms/tree/main/Data%20Sources>
+
+Note that we do not replicate the work from the source above and instead opt for another solution
+for a simple and clean demonstration of data processing and machine learning.
 
 ## Instructions
 ### 1. Clone the repository
