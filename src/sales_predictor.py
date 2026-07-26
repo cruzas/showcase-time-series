@@ -1,9 +1,17 @@
+import torch
 from torch import nn
 
 
 class SalesPredictor(nn.Module):
-    def __init__(self, input_dim):
+    def __init__(self, cont_dim, num_stores=46, num_depts=100, emb_dim=10):
         super().__init__()
+
+        self.store_emb = nn.Embedding(num_stores, emb_dim)
+        self.dept_emb = nn.Embedding(num_depts, emb_dim)
+
+        # Calculate the input dimension
+        input_dim = cont_dim + (emb_dim * 2)
+
         self.network = nn.Sequential(
             # Hidden layer 1
             nn.Linear(input_dim, 256),
@@ -23,5 +31,12 @@ class SalesPredictor(nn.Module):
             nn.Linear(64, 1),
         )
 
-    def forward(self, x):
+    def forward(self, x_cont, x_cat):
+        # Extract embeddings
+        store_embeds = self.store_emb(x_cat[:, 0])
+        dept_embeds = self.dept_emb(x_cat[:, 1])
+
+        # Concatenate the continuous features with the embeddings
+        x = torch.cat([x_cont, store_embeds, dept_embeds], dim=1)
+
         return self.network(x)

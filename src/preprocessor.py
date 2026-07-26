@@ -22,10 +22,8 @@ class DataPreprocessor:
         self.x_scaler = StandardScaler()
         self.y_scaler = StandardScaler()
 
-        # Get the features.csv column names.
-        self.features_cols = [
-            "Store",
-            "Dept",
+        # Isolates features with continuous values for scaling.
+        self.cont_cols = [
             "Year",
             "Month",
             "Week",
@@ -36,13 +34,17 @@ class DataPreprocessor:
             "Fuel_Price",
         ]
 
-        # We are interested in predicting weekly sales, so we set the target
-        # column accordingly.
+        # Isolates the categorical IDs for embeddings.
+        self.cat_cols = ["Store", "Dept"]
+
+        # We are interested in predicting weekly sales, so that is
+        # our target column.
         self.target_col = "Weekly_Sales"
 
     def extract_time_features(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Extracts temporal components using ISO calendar rules.
+        Extracts temporal components,
+        i.e., those that refer to time in some way.
         """
         df = df.copy()
         df["Date"] = pd.to_datetime(df["Date"])
@@ -72,22 +74,27 @@ class DataPreprocessor:
         # expect a 2D array.
         df[["Type"]] = self.encoder.fit_transform(df[["Type"]])
 
-        x = df[self.features_cols].values
-        y = df[self.target_col].values.reshape(-1, 1)  # Reshape to 2D
+        x_cont = self.x_scaler.fit_transform(df[self.cont_cols].values)
+        x_cat = df[self.cat_cols].values.astype(int)
+        y_scaled = self.y_scaler.fit_transform(
+            df[self.target_col].values.reshape(-1, 1)
+        )
 
-        x_scaled = self.x_scaler.fit_transform(x)
-        y_scaled = self.y_scaler.fit_transform(y)
-
-        return x_scaled, y_scaled.flatten()  # flatten back to 1D for PyTorch
+        # Flatten returns a 1D tensor.
+        return (
+            x_cont,
+            x_cat,
+            y_scaled.flatten(),
+        )
 
     def transform(self, df: pd.DataFrame) -> tuple:
         df = self.extract_time_features(df)
         df[["Type"]] = self.encoder.transform(df[["Type"]])
 
-        x = df[self.features_cols].values
-        y = df[self.target_col].values.reshape(-1, 1)
+        x_cont = self.x_scaler.transform(df[self.cont_cols].values)
+        x_cat = df[self.cat_cols].values.astype(int)
+        y_scaled = self.y_scaler.transform(
+            df[self.target_col].values.reshape(-1, 1)
+        )
 
-        x_scaled = self.x_scaler.transform(x)
-        y_scaled = self.y_scaler.transform(y)
-
-        return x_scaled, y_scaled.flatten()
+        return x_cont, x_cat, y_scaled.flatten()
