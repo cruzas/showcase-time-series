@@ -17,8 +17,10 @@ class DataPreprocessor:
         self.encoder = OrdinalEncoder()
 
         # For scaling numerical features to a standard distribution
-        # (mean=0, std=1), helpful for many ML algorithms,
-        # especially those that rely on distance metrics.
+        # (mean=0, std=1), helpful for many ML algorithms, especially those
+        # that rely on distance metrics. This prevents high-magnitude features
+        # from obscuring lower-magnitude variables (like temperature), ensuring
+        # that the model weighs all factors in a similar fashion.
         self.x_scaler = StandardScaler()
         self.y_scaler = StandardScaler()
 
@@ -43,8 +45,8 @@ class DataPreprocessor:
 
     def extract_time_features(self, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Extracts temporal components,
-        i.e., those that refer to time in some way.
+        Extracts temporal components, i.e., those that refer to time in some
+        way.
         """
         df = df.copy()
         df["Date"] = pd.to_datetime(df["Date"])
@@ -88,6 +90,10 @@ class DataPreprocessor:
         )
 
     def transform(self, df: pd.DataFrame) -> tuple:
+        """
+        As opposed to fit_transform, this doesn't store computed values
+        (mean, std) in the encoders and scalers.
+        """
         df = self.extract_time_features(df)
         df[["Type"]] = self.encoder.transform(df[["Type"]])
 

@@ -15,15 +15,16 @@ def load_and_merge_data(
     features = pd.read_csv(f"{data_dir}/features.csv")
 
     # Merge the dataframes for a complete view of the data.
-    # "how='left'" keeps all rows from the left dataframe (main_df) and only
-    # the matching rows from the right dataframe (stores and features).
+    # This ensures that we combine sales data with store metadata and
+    # external factors (like holidays and temperature) to have a
+    # better picture of what drives purchasing behaviour.
     merged_df = main_df.merge(stores, on="Store", how="left")
     merged_df = merged_df.merge(
         features, on=["Store", "Date", "IsHoliday"], how="left"
     )
 
     if not is_test:
-        # Walmart only started tracking markdowns (discounts) in 2011-11-11.
+        # Walmart only started tracking markdowns (discounts) on 2011-11-11.
         # Before that, values were filled as NaN to denote "no discount",
         # so we fill missing values with 0 to allow proper training.
         # There are only 5 markdown columns, so this can be hard-coded.

@@ -6,6 +6,10 @@ class SalesPredictor(nn.Module):
     def __init__(self, cont_dim, num_stores=46, num_depts=100, emb_dim=10):
         super().__init__()
 
+        # Embeddings encode information about the individual stores and
+        # departments. Better than simply storing them as numbers in
+        # increasing order, as that can be misleading information for a
+        # neural network.
         self.store_emb = nn.Embedding(num_stores, emb_dim)
         self.dept_emb = nn.Embedding(num_depts, emb_dim)
 
