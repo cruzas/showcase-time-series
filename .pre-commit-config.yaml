@@ -1,0 +1,35 @@
+# Install with:  pre-commit install
+# Run on everything:  pre-commit run --all-files
+default_language_version:
+  python: python3
+
+# Never let the whitespace fixers touch the dataset, the checkpoint or the
+# notebook: stripping a trailing space or adding a final newline silently
+# changes the data, and notebooks are rewritten by Jupyter on every save.
+exclude: |
+  (?x)^(
+    data/.*
+    |saved_weights/.*
+    |notebooks/.*
+  )$
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+        args: [--maxkb=1024]
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-yaml
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.5
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
